@@ -1,12 +1,14 @@
 import React, {Component} from 'react'
+import CharacterSelector from '../components/CharacterSelector.js'
 
 class CharacterContainer extends Component {
   constructor(props) {
     super(props)
     this.state = {
       characters: [],
-      selectedCharacter: ""
+      selectedCharacterName: ""
     }
+    this.changeSelectedCharacterName = this.changeSelectedCharacterName.bind(this)
   }
 
   componentDidMount(){
@@ -17,10 +19,15 @@ class CharacterContainer extends Component {
       .catch(err => console.error)
   }
 
+  changeSelectedCharacterName(name){
+    this.setState({ selectedCharacterName: name})
+  }
+
   render(){
     return (
       <div>
-        <h2> CharacterContainer </h2>
+        <h2> Characters </h2>
+        <CharacterSelector characters={this.state.characters} onCharacterSelect={this.changeSelectedCharacterName}/>
       </div>
     )
   }
