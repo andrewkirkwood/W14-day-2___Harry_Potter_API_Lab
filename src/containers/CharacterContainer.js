@@ -7,35 +7,50 @@ class CharacterContainer extends Component {
     super(props)
     this.state = {
       characters: [],
-      selectedCharacterName: ""
+      selectedCharacterId: ""
     }
-    this.changeSelectedCharacterName = this.changeSelectedCharacterName.bind(this)
-    this.getSelectedCharacter = this.getSelectedCharacter.bind(this)
+    this.changeSelectedCharacterId = this.changeSelectedCharacterId.bind(this)
+    // this.getSelectedCharacter = this.getSelectedCharacter.bind(this)
+    this.addIdsToAllCharacters = this.addIdsToAllCharacters.bind(this)
   }
 
+  addIdsToAllCharacters(characters){
+    return characters.map((character, index) => {
+      return {
+        ...character,
+        id: `${index}`
+      }
+    })
+  }
   componentDidMount(){
-    const url = "http://hp-api.herokuapp.com/api/characters"
+    const url = "http://hp-api.herokuapp.com/api/characters/"
     fetch(url)
       .then(res => res.json())
-      .then(characters => this.setState({characters: characters}))
+      .then(characters => {
+        const charactersWithIds = this.addIdsToAllCharacters(characters)
+        this.setState({characters: charactersWithIds})
+      })
       .catch(err => console.error)
   }
 
-  changeSelectedCharacterName(name){
-    this.setState({ selectedCharacterName: name})
+  changeSelectedCharacterId(id){
+    this.setState({ selectedCharacterId: id})
   }
 
   getSelectedCharacter(){
-    return this.state.characters.find( character => character.name === this.state.selectedCharacterName)
+    const selectedCharacter = this.state.characters.find( character => {
+      return character.id === this.state.selectedCharacterId
+    })
+    return selectedCharacter
   }
 
   render(){
     return (
       <div>
         <h2> Characters </h2>
-        <CharacterSelector characters={this.state.characters} onCharacterSelect={this.changeSelectedCharacterName}/>
+        <CharacterSelector characters={this.state.characters} onCharacterSelect={this.changeSelectedCharacterId}/>
         <h3> Selected Character Details: </h3>
-        <CharacterDetail character={ this.getSelectedCharacter() }/>
+        <CharacterDetail character={ this.getSelectedCharacter()}/>
       </div>
     )
   }
