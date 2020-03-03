@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import CharacterSelector from '../components/CharacterSelector.js'
+import CharacterDetail from '../components/CharacterDetail.js'
 
 class CharacterContainer extends Component {
   constructor(props) {
@@ -9,6 +10,7 @@ class CharacterContainer extends Component {
       selectedCharacterName: ""
     }
     this.changeSelectedCharacterName = this.changeSelectedCharacterName.bind(this)
+    this.getSelectedCharacter = this.getSelectedCharacter.bind(this)
   }
 
   componentDidMount(){
@@ -23,11 +25,17 @@ class CharacterContainer extends Component {
     this.setState({ selectedCharacterName: name})
   }
 
+  getSelectedCharacter(){
+    return this.state.characters.find( character => character.name === this.state.selectedCharacterName)
+  }
+
   render(){
     return (
       <div>
         <h2> Characters </h2>
         <CharacterSelector characters={this.state.characters} onCharacterSelect={this.changeSelectedCharacterName}/>
+        <h3> Selected Character Details: </h3>
+        <CharacterDetail character={ this.getSelectedCharacter() }/>
       </div>
     )
   }
